@@ -19,17 +19,17 @@
         return  $val;
     }
     /* ============================================================================== */
-    $home_dir      = "/home/kcpuser/pgsample/USER/pjh/kcpcert_enc"; // ct_cll 절대경로 ( bin 전까지 )
+    $home_dir      = "/home/chicpro/www/g4s/bbs/kcp"; // ct_cll 절대경로 ( bin 전까지 )
 
     $site_cd       = "";
     $ordr_idxx     = "";
-    
+
     $cert_no       = "";
     $cert_enc_use  = "";
     $enc_info      = "";
     $enc_data      = "";
     $req_tx        = "";
-    
+
     $enc_cert_data = "";
     $cert_info     = "";
 
@@ -43,13 +43,13 @@
     /*------------------------------------------------------------------------*/
 
     // request 로 넘어온 값 처리
-    $key = array_keys($HTTP_POST_VARS);
+    $key = array_keys($_POST);
     $sbParam ="";
 
     for($i=0; $i<count($key); $i++)
     {
-        $nmParam = $key[$i]; 
-        $valParam = $HTTP_POST_VARS[$nmParam];
+        $nmParam = $key[$i];
+        $valParam = $_POST[$nmParam];
 
         if ( $nmParam == "site_cd" )
         {
@@ -93,7 +93,7 @@
 
         $sbParam .= "<input type='hidden' name='" . $nmParam . "' value='" . f_get_parm_str( $valParam ) . "'/>";
     }
-    
+
 
     $ct_cert = new C_CT_CLI;
     $ct_cert->mf_clear();
@@ -118,16 +118,16 @@
 		        echo "사이트 코드"    .    $site_cd;
 		        echo "인증 번호"      .    $cert_no;
 		        echo "암호된 인증정보".    $enc_cert_data;
-		        
+
 		        $ct_cert->decrypt_enc_cert( $home_dir , $site_cd , $cert_no , $enc_cert_data );
-		        
-  		        echo "이동통신사 코드"    . $ct_cert->mf_get_key_value("comm_id"    )."<br>"; // 이동통신사 코드   
-		        echo "전화번호"           . $ct_cert->mf_get_key_value("phone_no"   )."<br>"; // 전화번호          
-		        echo "이름"               . $ct_cert->mf_get_key_value("user_name"  )."<br>"; // 이름              
-		        echo "생년월일"           . $ct_cert->mf_get_key_value("birth_day"  )."<br>"; // 생년월일          
-		        echo "성별코드"           . $ct_cert->mf_get_key_value("sex_code"   )."<br>"; // 성별코드          
-		        echo "내/외국인 정보 "    . $ct_cert->mf_get_key_value("local_code" )."<br>"; // 내/외국인 정보    
-		        echo "CI"                 . $ct_cert->mf_get_key_value("ci"         )."<br>"; // CI                
+
+  		        echo "이동통신사 코드"    . $ct_cert->mf_get_key_value("comm_id"    )."<br>"; // 이동통신사 코드
+		        echo "전화번호"           . $ct_cert->mf_get_key_value("phone_no"   )."<br>"; // 전화번호
+		        echo "이름"               . $ct_cert->mf_get_key_value("user_name"  )."<br>"; // 이름
+		        echo "생년월일"           . $ct_cert->mf_get_key_value("birth_day"  )."<br>"; // 생년월일
+		        echo "성별코드"           . $ct_cert->mf_get_key_value("sex_code"   )."<br>"; // 성별코드
+		        echo "내/외국인 정보 "    . $ct_cert->mf_get_key_value("local_code" )."<br>"; // 내/외국인 정보
+		        echo "CI"                 . $ct_cert->mf_get_key_value("ci"         )."<br>"; // CI
 	            echo "DI 중복가입 확인값" . $ct_cert->mf_get_key_value("di"         )."<br>"; // DI 중복가입 확인값
 	            echo "암호화된 결과코드"  . $ct_cert->mf_get_key_value("res_cd"     )."<br>"; // 암호화된 결과코드
                 echo "암호화된 결과메시지". $ct_cert->mf_get_key_value("res_msg"    )."<br>"; // 암호화된 결과메시지

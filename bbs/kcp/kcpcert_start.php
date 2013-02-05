@@ -28,13 +28,13 @@
                 var nField        = frm.elements.length;
                 var response_data = "";
 
-                // up_hash 검증 
+                // up_hash 검증
                 if( frm.up_hash.value != auth_form.veri_up_hash.value )
                 {
                     alert("up_hash 변조 위험있음");
                     // 오류 처리 ( dn_hash 변조 위험있음)
                 }
-                
+
                /* 리턴 값 모두 찍어보기 (테스트 시에만 사용) */
                 var form_value = "";
 
@@ -44,16 +44,16 @@
                 }
                 alert(form_value);
             }
-            
+
             // 인증창 호출 함수
             function auth_type_check()
             {
                 var auth_form = document.form_auth;
-    
+
                 if( auth_form.ordr_idxx.value == "" )
                 {
                     alert( "주문번호는 필수 입니다." );
-    
+
                     return false;
                 }
                 else
@@ -61,15 +61,15 @@
                     auth_form.user_name_temp.value = encodeURIComponent(auth_form.user_name_temp.value); // post 방식일경우 필요 없음.
                     auth_form.user_name.value      = auth_form.user_name_temp.value;
                     auth_form.user_name_temp.value = "";                                                 // post 방식일경우 필요 없음.
-                    
+
                     auth_form.method = "post";
                     auth_form.target = "kcp_cert";
                     auth_form.action = "./kcpcert_proc_req.php"; // 인증페이지 호출
-                    
+
                     return true;
                 }
             }
-    
+
             /* 예제 */
             window.onload=function()
             {
@@ -81,27 +81,27 @@
                 var year_select_box  = "<option value=''>선택 (년)</option>";
                 var month_select_box = "<option value=''>선택 (월)</option>";
                 var day_select_box   = "<option value=''>선택 (일)</option>";
-                
+
                 if(parseInt(month) < 10) {
                     month = "0" + month;
                 }
-    
+
                 if(parseInt(date) < 10) {
                     date = "0" + date;
                 }
-    
+
                 year_select_box = "<select name='year' class='frmselect' id='year_select'>";
                 year_select_box += "<option value=''>선택 (년)</option>";
-       
+
                 for(i=year;i>(year-100);i--)
                 {
                     year_select_box += "<option value='" + i + "'>" + i + " 년</option>";
                 }
-                
+
                 year_select_box  += "</select>";
                 month_select_box  = "<select name=\"month\" class=\"frmselect\" id=\"month_select\">";
                 month_select_box += "<option value=''>선택 (월)</option>";
-                
+
                 for(i=1;i<13;i++)
                 {
                     if(i < 10)
@@ -113,7 +113,7 @@
                         month_select_box += "<option value='" + i + "'>" + i + " 월</option>";
                     }
                 }
-                
+
                 month_select_box += "</select>";
                 day_select_box    = "<select name=\"day\"   class=\"frmselect\" id=\"day_select\"  >";
                 day_select_box   += "<option value=''>선택 (일)</option>";
@@ -128,11 +128,11 @@
                         day_select_box += "<option value='" + i + "'>" + i + " 일</option>";
                     }
                 }
-                
+
                 day_select_box += "</select>";
-                
+
                 document.getElementById( "year_month_day"  ).innerHTML = year_select_box + month_select_box + day_select_box;
-                
+
                 init_orderid(); // 주문번호 샘플 생성
             }
 
@@ -164,7 +164,7 @@
                     <tr style="height:14px"><td style="background-image:url('./img/boxtop589.gif');"></td></tr>
                     <tr>
                         <td style="background-image:url('./img/boxbg589.gif')">
-        
+
                             <!-- 상단 테이블 Start -->
                             <table width="551px" align="center" cellspacing="0" cellpadding="16">
                                 <tr style="height:17px">
@@ -181,7 +181,7 @@
                                 <tr style="height:11px"><td style="background:url('./img/boxbtm551.gif') no-repeat;"></td></tr>
                             </table>
                             <!-- 상단 테이블 End -->
-        
+
                             <!-- 주문 정보 출력 테이블 Start -->
                             <table width="527" align="center" cellspacing="0" cellpadding="0" class="margin_top_20">
                                 <tr><td colspan="2"  class="title">인 증 정 보</td></tr>
@@ -214,11 +214,11 @@
                                         </select>
                                     </td>
                                 </tr>
-        
+
                                 <tr class="height_1px"><td colspan="2" bgcolor="#0f75ac"></td></tr>
                             </table>
                             <!-- 주문 정보 출력 테이블 End -->
-        
+
                             <!-- 결제 버튼 테이블 Start -->
                             <table width="527" align="center" cellspacing="0" cellpadding="0" class="margin_top_20">
                                 <!-- 결제 요청/처음으로 이미지 버튼 -->
@@ -233,14 +233,14 @@
                     </tr>
                     <tr><td><img src="./img/boxbtm589.gif" alt="Copyright(c) KCP Inc. All rights reserved."/></td></tr>
                 </table>
-        
+
                 <!-- 요청종류 -->
                 <input type="hidden" name="req_tx"       value="cert"/>
                 <!-- 요청구분 -->
                 <input type="hidden" name="cert_method"  value="01"/>
                 <!-- 웹사이트아이디 -->
-                <input type="hidden" name="web_siteid"   value=""/> 
-                <!-- 노출 통신사 default 처리시 아래의 주석을 해제하고 사용하십시요 
+                <input type="hidden" name="web_siteid"   value=""/>
+                <!-- 노출 통신사 default 처리시 아래의 주석을 해제하고 사용하십시요
                      SKT : SKT , KT : KTF , LGU+ : LGT
                 <input type="hidden" name="fix_commid"      value="KTF"/>
                 -->
@@ -249,9 +249,9 @@
                 <!-- 유저네임 -->
                 <input type="hidden" name="user_name"    value="" />
                 <!-- Ret_URL : 인증결과 리턴 페이지 ( 가맹점 URL 로 설정해 주셔야 합니다. ) -->
-                <input type="hidden" name="Ret_URL"      value="http://freeway.kcp.co.kr/pgsample/USER/pjh/kcpcert_enc/kcpcert_proc_req.php" />
-                <!-- Ret_Noti : 인증 정보 노티 (인증 처리 정보를 노티로 받기위한 URL : 메뉴얼 참고) --> 
-                <input type="hidden" name="Ret_Noti"     value="https://testpay.kcp.co.kr/test_cert/ret_noti.jsp" /> 
+                <input type="hidden" name="Ret_URL"      value="http://chicpro.chin.so/g4s/bbs/kcp/kcpcert_proc_req.php" />
+                <!-- Ret_Noti : 인증 정보 노티 (인증 처리 정보를 노티로 받기위한 URL : 메뉴얼 참고) -->
+                <input type="hidden" name="Ret_Noti"     value="https://testpay.kcp.co.kr/test_cert/ret_noti.jsp" />
                 <!-- cert_otp_use 필수 ( 메뉴얼 참고)
                      Y : 실명 확인 + OTP 점유 확인 , N : 실명 확인 only
                 -->
@@ -266,9 +266,9 @@
                 <input type="hidden" name="veri_up_hash" value=""/>
 
                 <!-- 가맹점 사용 필드 (인증완료시 리턴)-->
-                <input type="hidden" name="param_opt_1"  value="opt1"/> 
-                <input type="hidden" name="param_opt_2"  value="opt2"/> 
-                <input type="hidden" name="param_opt_3"  value="opt3"/> 
+                <input type="hidden" name="param_opt_1"  value="opt1"/>
+                <input type="hidden" name="param_opt_2"  value="opt2"/>
+                <input type="hidden" name="param_opt_3"  value="opt3"/>
             </form>
             <iframe id="kcp_cert" name="kcp_cert" width="0" height="0" frameborder="0" scrolling="no"></iframe>
         </div>
