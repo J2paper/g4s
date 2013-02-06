@@ -58,9 +58,9 @@
                 }
                 else
                 {
-                    auth_form.user_name_temp.value = encodeURIComponent(auth_form.user_name_temp.value); // post 방식일경우 필요 없음.
+                    //auth_form.user_name_temp.value = encodeURIComponent(auth_form.user_name_temp.value); // post 방식일경우 필요 없음.
                     auth_form.user_name.value      = auth_form.user_name_temp.value;
-                    auth_form.user_name_temp.value = "";                                                 // post 방식일경우 필요 없음.
+                    //auth_form.user_name_temp.value = "";                                                 // post 방식일경우 필요 없음.
 
                     auth_form.method = "post";
                     auth_form.target = "kcp_cert";
@@ -152,7 +152,7 @@
 
                 var vOrderID = year + "" + month + "" + date + "" + time;
 
-                document.form_auth.ordr_idxx.value = vOrderID;
+                document.form_auth.ordr_idxx.value = "1234";
             }
 
         </script>
@@ -249,7 +249,7 @@
                 <!-- 유저네임 -->
                 <input type="hidden" name="user_name"    value="" />
                 <!-- Ret_URL : 인증결과 리턴 페이지 ( 가맹점 URL 로 설정해 주셔야 합니다. ) -->
-                <input type="hidden" name="Ret_URL"      value="http://chicpro.chin.so/g4s/bbs/kcp/kcpcert_proc_req.php" />
+                <input type="hidden" name="Ret_URL"      value="http://freeway.kcp.co.kr/pgsample/USER/pjh/kcpcert_enc/kcpcert_proc_req.php" />
                 <!-- Ret_Noti : 인증 정보 노티 (인증 처리 정보를 노티로 받기위한 URL : 메뉴얼 참고) -->
                 <input type="hidden" name="Ret_Noti"     value="https://testpay.kcp.co.kr/test_cert/ret_noti.jsp" />
                 <!-- cert_otp_use 필수 ( 메뉴얼 참고)

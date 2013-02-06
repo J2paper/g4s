@@ -7,7 +7,7 @@ var member_skin_url = "<?=$member_skin_url?>";
 </script>
 <script src="<?=$member_skin_url?>/ajax_register_form.jquery.js"></script>
 
-<form id="fregisterform" name="fregisterform" method="post" action="<?=$register_action_url?>" onsubmit="return fregisterform_submit(this);" enctype="multipart/form-data" autocomplete="off">
+<form id="fregisterform" name="fregisterform" method="post" action="<?=$register_action_url?>" enctype="multipart/form-data" autocomplete="off">
 <input type="hidden" name="w" value="<?=$w?>">
 <input type="hidden" name="url" value="<?=$urlencode?>">
 <input type="hidden" name="agree" value="<?=$agree?>">
@@ -17,7 +17,6 @@ var member_skin_url = "<?=$member_skin_url?>";
 <input type="hidden" name="mb_nick_default" value="<?=$member['mb_nick']?>">
 <input type="hidden" name="mb_nick" value="<?=$member['mb_nick']?>">
 <? } ?>
-
 <div class="cbg">
     <table class="frm_tbl">
     <caption>사이트 이용정보 입력</caption>
@@ -48,6 +47,7 @@ var member_skin_url = "<?=$member_skin_url?>";
         <td>
             <input id="reg_mb_name" name="mb_name" class="frm_input hangul nospace <?=$required?> <?=$readonly?>" value="<?=$member['mb_name']?>" size="10" <?=$required?> <?=$readonly?>>
             <? if ($w=='') { echo "<span class=\"frm_info\">공백없이 한글만 입력하세요.</span>"; } ?>
+            <? if($config['cf_kcpcert_use'] && $w == "") { echo "<input type=\"button\" value=\"본인인증\" onclick=\"auth_type_check();\"/>"; } ?>
         </td>
     </tr>
     <? if ($req_nick) { ?>
@@ -218,11 +218,89 @@ var member_skin_url = "<?=$member_skin_url?>";
 </div>
 </form>
 
+<?
+if($config['cf_kcpcert_use'] && $w == "") {
+?>
+<form name="form_auth">
+<input type="hidden" name="user_name_temp" value=""/>
+<input type="hidden" name="sex_code" value=""/>
+<input type="hidden" name="local_code" value=""/>
+<input type="hidden" name="year" value=""/>
+<input type="hidden" name="month" value=""/>
+<input type="hidden" name="day" value=""/>
+<input type="hidden" name="ordr_idxx" value="1234" />
+<!-- 요청종류 -->
+<input type="hidden" name="req_tx"       value="cert"/>
+<!-- 요청구분 -->
+<input type="hidden" name="cert_method"  value="01"/>
+<!-- 웹사이트아이디 -->
+<input type="hidden" name="web_siteid"   value=""/>
+<!-- 노출 통신사 default 처리시 아래의 주석을 해제하고 사용하십시요
+     SKT : SKT , KT : KTF , LGU+ : LGT
+<input type="hidden" name="fix_commid"      value="KTF"/>
+-->
+<!-- 사이트코드 -->
+<input type="hidden" name="site_cd"      value="<?= $config['cf_kcpcert_site_cd'] ?>" />
+<!-- 유저네임 -->
+<input type="hidden" name="user_name"    value="" />
+<!-- Ret_URL : 인증결과 리턴 페이지 ( 가맹점 URL 로 설정해 주셔야 합니다. ) -->
+<input type="hidden" name="Ret_URL"      value="<?=G4_BBS_URL?>/kcp/kcpcert_result.php" />
+<!-- Ret_Noti : 인증 정보 노티 (인증 처리 정보를 노티로 받기위한 URL : 메뉴얼 참고) -->
+<input type="hidden" name="Ret_Noti"     value="https://testpay.kcp.co.kr/test_cert/ret_noti.jsp" />
+<!-- cert_otp_use 필수 ( 메뉴얼 참고)
+     Y : 실명 확인 + OTP 점유 확인 , N : 실명 확인 only
+-->
+<input type="hidden" name="cert_otp_use" value="Y"/>
+<!-- cert_enc_use 필수 (고정값 : 메뉴얼 참고) -->
+<input type="hidden" name="cert_enc_use" value="Y"/>
+
+<input type="hidden" name="res_cd"       value=""/>
+<input type="hidden" name="res_msg"      value=""/>
+
+<!-- up_hash 검증을 위한 필드 -->
+<input type="hidden" name="veri_up_hash" value=""/>
+
+<!-- dn_hash 검증으 위한 필드 -->
+<input type="hidden" name="veri_dn_hasn" value=""/>
+
+<!-- 가맹점 사용 필드 (인증완료시 리턴)-->
+<input type="hidden" name="param_opt_1"  value="opt1"/>
+<input type="hidden" name="param_opt_2"  value="opt2"/>
+<input type="hidden" name="param_opt_3"  value="opt3"/>
+</form>
+<iframe id="kcp_cert" name="kcp_cert" width="0" height="0" frameborder="0" scrolling="no"></iframe>
+<? } ?>
+
 <script>
 $(function() {
     $("#reg_zip_find").css("display", "inline-block");
     $("#reg_mb_zip1, #reg_mb_zip2, #reg_mb_addr1").attr("readonly", true);
 });
+
+// 인증창 호출 함수
+function auth_type_check()
+{
+    var auth_form = document.form_auth;
+
+    if( auth_form.ordr_idxx.value == "" )
+    {
+        alert( "주문번호는 필수 입니다." );
+
+        return false;
+    }
+    else
+    {
+        //auth_form.user_name_temp.value = encodeURIComponent(auth_form.user_name_temp.value); // post 방식일경우 필요 없음.
+        auth_form.user_name.value      = auth_form.user_name_temp.value;
+        //auth_form.user_name_temp.value = "";                                                 // post 방식일경우 필요 없음.
+
+        auth_form.method = "post";
+        auth_form.target = "kcp_cert";
+        auth_form.action = "<?=G4_BBS_URL?>/kcp/kcpcert_request.php"; // 인증페이지 호출
+
+        auth_form.submit();
+    }
+}
 
 // submit 최종 폼체크
 function fregisterform_submit(f)
@@ -314,6 +392,15 @@ function fregisterform_submit(f)
     }
 
     <? echo chk_captcha_js(); ?>
+
+    <? if($config['cf_kcpcert_use'] && $w == "") { ?>
+    if(f.res_cd.value != '0000') {
+        alert('본인인증을 완료해 주십시오.');
+        return false;
+    }
+    <? } ?>
+
+    f.action = "<?=$register_action_url?>";
 
     return true;
 }
